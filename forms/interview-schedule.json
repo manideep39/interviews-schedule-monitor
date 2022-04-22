@@ -1,0 +1,150 @@
+{
+  "view": {
+    "title": {
+      "type": "plain_text",
+      "text": "Interview Schedule",
+      "emoji": true
+    },
+    "callback_id": "interview_schedule",
+    "submit": {
+      "type": "plain_text",
+      "text": "Submit",
+      "emoji": true
+    },
+    "type": "modal",
+    "close": {
+      "type": "plain_text",
+      "text": "Cancel",
+      "emoji": true
+    },
+    "blocks": [
+      {
+        "block_id": "student-name",
+        "type": "input",
+        "element": {
+          "type": "plain_text_input",
+          "action_id": "student-name",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "First name followed by last name",
+            "emoji": true
+          }
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Name",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "studentCode",
+        "type": "input",
+        "element": {
+          "type": "plain_text_input",
+          "action_id": "studentCode",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "ac_042",
+            "emoji": true
+          }
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Student code",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "email",
+        "type": "input",
+        "element": {
+          "type": "plain_text_input",
+          "action_id": "email",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "your primary email",
+            "emoji": true
+          }
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Email",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "company-name",
+        "type": "input",
+        "element": {
+          "type": "static_select",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Choose the interviewing company",
+            "emoji": true
+          },
+          "options": [],
+          "action_id": "company-name"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Company Name",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "interview-date",
+        "type": "input",
+        "element": {
+          "type": "datepicker",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Select a date",
+            "emoji": true
+          },
+          "action_id": "interview-date"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Interview Date",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "interview-start-time",
+        "type": "input",
+        "element": {
+          "type": "timepicker",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Select start time",
+            "emoji": true
+          },
+          "action_id": "interview-start-time"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Interview Start Time",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "interview-end-time",
+        "type": "input",
+        "element": {
+          "type": "timepicker",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Select end time",
+            "emoji": true
+          },
+          "action_id": "interview-end-time"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Interview End Time",
+          "emoji": true
+        }
+      }
+    ]
+  }
+}
