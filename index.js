@@ -9,6 +9,7 @@ const express = require("express");
 const app = express();
 
 const Team = require("./models/team.model");
+const InterviewSchedule = require("./models/interview-schedule.model");
 
 app.use(express.json());
 app.use(
@@ -62,13 +63,23 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
 
     if (type === "view_submission") {
       const {
-        callback_id,
         state: { values },
       } = view;
-
-      if (callback_id === "lecture_feedback") {
-        res.status(200).json({ response_action: "clear" });
-      }
+      await InterviewSchedule.create({
+        teamId: team.id,
+        userId: user.id,
+        name: values["student-name"]["student-name"].value,
+        studentCode: values.studentCode.studentCode.value,
+        email: values.email.email.value,
+        companyName:
+          values["company-name"]["company-name"].selected_option.value,
+        interviewDate: values["interview-date"]["interview-date"].selected_date,
+        interviewStartTime:
+          values["interview-start-time"]["interview-start-time"].selected_time,
+        interviewEndTime:
+          values["interview-end-time"]["interview-end-time"].selected_time,
+      });
+      res.status(200).json({ response_action: "clear" });
     } else {
       const { accessToken, companies } = await Team.findOne({
         teamId: team.id,
@@ -86,7 +97,6 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
           value: `${lead.trim().toLowerCase().replace(/ /g, "-")}`,
         })
       );
-
       interviewScheduleForm.trigger_id = trigger_id;
       const response = await axios({
         method: "post",
@@ -98,7 +108,7 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
         data: interviewScheduleForm,
       });
 
-      return res.send('ok');
+      return res.send("ok");
     }
   } catch (e) {
     console.error(e);
