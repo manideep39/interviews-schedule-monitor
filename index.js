@@ -138,6 +138,15 @@ app.post("/companies", async (req, res) => {
   }
 });
 
+app.get("/interviews-schedule/:date", async (req, res) => {
+  try {
+    const interviewsSchedule = await InterviewSchedule.find({interviewDate: req.params.date}).lean();
+    res.status(200).json(interviewsSchedule);
+  } catch (error) {
+    res.status(500).send(`Something went wrong: ${err}`);
+  }
+})
+
 async function generateAccessToken(req, res, next) {
   const code = req.query.code;
   const url = "https://slack.com/api/oauth.v2.access";
