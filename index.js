@@ -1,15 +1,43 @@
 const path = require("path");
-
 require("dotenv").config();
 const cors = require("cors");
-
 const axios = require("axios");
 const mongoose = require("mongoose");
 const express = require("express");
-const app = express();
+const { google } = require("googleapis");
 
 const Team = require("./models/team.model");
 const InterviewSchedule = require("./models/interview-schedule.model");
+const serviceKeyFile = require("./service-key-file.json");
+
+const {
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI,
+  KEY,
+  PORT,
+  MONGODB_URI,
+  SCOPES,
+  GOOGLE_PRIVATE_KEY,
+  GOOGLE_CLIENT_EMAIL,
+  GOOGLE_PROJECT_NUMBER,
+  GOOGLE_CALENDAR_ID,
+} = process.env;
+
+const jwtClient = new google.auth.JWT(
+  GOOGLE_CLIENT_EMAIL,
+  null,
+  GOOGLE_PRIVATE_KEY,
+  SCOPES
+);
+
+const calendar = google.calendar({
+  version: "v3",
+  project: GOOGLE_PROJECT_NUMBER,
+  auth: jwtClient,
+});
+
+const app = express();
 
 app.use(express.json());
 app.use(
@@ -18,9 +46,6 @@ app.use(
   })
 );
 app.use(cors());
-
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, KEY, PORT, MONGODB_URI } =
-  process.env;
 
 app.listen(PORT || 3000, () => {
   try {
@@ -140,12 +165,86 @@ app.post("/companies", async (req, res) => {
 
 app.get("/interviews-schedule/:date", async (req, res) => {
   try {
-    const interviewsSchedule = await InterviewSchedule.find({interviewDate: req.params.date}).lean();
+    const interviewsSchedule = await InterviewSchedule.find({
+      interviewDate: req.params.date,
+    }).lean();
     res.status(200).json(interviewsSchedule);
   } catch (error) {
     res.status(500).send(`Something went wrong: ${err}`);
   }
-})
+});
+
+app.get("/", (req, res) => {
+  calendar.events.list(
+    {
+      calendarId: GOOGLE_CALENDAR_ID,
+      timeMin: new Date().toISOString(),
+      maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
+    },
+    (error, result) => {
+      if (error) {
+        res.send(JSON.stringify({ error: error }));
+      } else {
+        if (result.data.items.length) {
+          res.send(JSON.stringify({ events: result.data.items }));
+        } else {
+          res.send(JSON.stringify({ message: "No upcoming events found." }));
+        }
+      }
+    }
+  );
+});
+
+app.get("/createEvent", (req, res) => {
+  var event = {
+    summary: "My first event!",
+    location: "Hyderabad,India",
+    description: "First event with nodeJS!",
+    start: {
+      dateTime: "2022-05-25T09:00:00-07:00",
+      timeZone: "Asia/Dhaka",
+    },
+    end: {
+      dateTime: "2022-05-25T10:00:00-07:00",
+      timeZone: "Asia/Dhaka",
+    },
+    attendees: [],
+    reminders: {
+      useDefault: false,
+      overrides: [
+        { method: "email", minutes: 24 * 60 },
+        { method: "popup", minutes: 10 },
+      ],
+    },
+  };
+
+  const auth = new google.auth.GoogleAuth({
+    keyFile:
+      "/Users/manideep/masai-school/interviews-schedule-monitor/service-key-file.json",
+    scopes: "https://www.googleapis.com/auth/calendar",
+  });
+  auth.getClient().then((a) => {
+    calendar.events.insert(
+      {
+        auth: a,
+        calendarId: GOOGLE_CALENDAR_ID,
+        resource: event,
+      },
+      function (err, event) {
+        if (err) {
+          console.log(
+            "There was an error contacting the Calendar service: " + err
+          );
+          return;
+        }
+        console.log("Event created: %s", event.data);
+        res.jsonp("Event successfully created!");
+      }
+    );
+  });
+});
 
 async function generateAccessToken(req, res, next) {
   const code = req.query.code;
