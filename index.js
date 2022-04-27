@@ -90,19 +90,76 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
       const {
         state: { values },
       } = view;
+      const name = values["student-name"]["student-name"].value;
+      const studentCode = values.studentCode.studentCode.value;
+      const email = values.email.email.value;
+      const companyName =
+        values["company-name"]["company-name"].selected_option.value;
+      const interviewDate =
+        values["interview-date"]["interview-date"].selected_date;
+      const interviewStartTime =
+        values["interview-start-time"]["interview-start-time"].selected_time;
+      const interviewEndTime =
+        values["interview-end-time"]["interview-end-time"].selected_time;
+
       await InterviewSchedule.create({
         teamId: team.id,
         userId: user.id,
-        name: values["student-name"]["student-name"].value,
-        studentCode: values.studentCode.studentCode.value,
-        email: values.email.email.value,
-        companyName:
-          values["company-name"]["company-name"].selected_option.value,
-        interviewDate: values["interview-date"]["interview-date"].selected_date,
-        interviewStartTime:
-          values["interview-start-time"]["interview-start-time"].selected_time,
-        interviewEndTime:
-          values["interview-end-time"]["interview-end-time"].selected_time,
+        name,
+        studentCode,
+        email,
+        companyName,
+        interviewDate,
+        interviewStartTime,
+        interviewEndTime,
+      });
+
+      var event = {
+        summary: `Name: ${name};
+        Code: ${studentCode};
+        Company: ${companyName}`,
+        location: "",
+        description: "",
+        start: {
+          dateTime: `${interviewDate}T${interviewStartTime}:00`,
+          timeZone: "Asia/Kolkata",
+        },
+        end: {
+          dateTime: `${interviewDate}T${interviewEndTime}:00`,
+          timeZone: "Asia/Kolkata",
+        },
+        attendees: [],
+        reminders: {
+          useDefault: false,
+          overrides: [
+            { method: "email", minutes: 24 * 60 },
+            { method: "popup", minutes: 10 },
+          ],
+        },
+      };
+
+      const auth = new google.auth.GoogleAuth({
+        keyFile:
+          "/Users/manideep/masai-school/interviews-schedule-monitor/service-key-file.json",
+        scopes: "https://www.googleapis.com/auth/calendar",
+      });
+      auth.getClient().then((a) => {
+        calendar.events.insert(
+          {
+            auth: a,
+            calendarId: GOOGLE_CALENDAR_ID,
+            resource: event,
+          },
+          function (err, event) {
+            if (err) {
+              console.log(
+                "There was an error contacting the Calendar service: " + err
+              );
+              return;
+            }
+            console.log("Event created: %s", event.data);
+          }
+        );
       });
       res.status(200).json({ response_action: "clear" });
     } else {
