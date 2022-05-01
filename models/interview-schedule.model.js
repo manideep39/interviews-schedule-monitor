@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const interviewSchedule = mongoose.Schema(
   {
     teamId: { type: String, required: true },
+    batchName: { type: String, required: true },
     userId: { type: String, required: true },
     name: { type: String, required: true, trim: true },
     studentCode: { type: String, required: true, trim: true },
@@ -11,6 +12,8 @@ const interviewSchedule = mongoose.Schema(
     interviewDate: { type: String, required: true },
     interviewStartTime: { type: String, required: true },
     interviewEndTime: { type: String, required: true },
+    interviewRound: { type: String, required: true},
+    interviewType: [{ type: String, required: true}]
   },
   { timestamps: true }
 );

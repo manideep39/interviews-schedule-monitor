@@ -8,7 +8,7 @@ const { google } = require("googleapis");
 
 const Team = require("./models/team.model");
 const InterviewSchedule = require("./models/interview-schedule.model");
-const serviceKeyFile = require("./service-key-file.json");
+const serviceKeyFile = require("./service-key.json");
 
 const {
   CLIENT_ID,
@@ -17,25 +17,19 @@ const {
   KEY,
   PORT,
   MONGODB_URI,
-  SCOPES,
   GOOGLE_PRIVATE_KEY,
   GOOGLE_CLIENT_EMAIL,
-  GOOGLE_PROJECT_NUMBER,
-  GOOGLE_CALENDAR_ID,
+  SUBJECT,
 } = process.env;
 
-const jwtClient = new google.auth.JWT(
-  GOOGLE_CLIENT_EMAIL,
-  null,
-  GOOGLE_PRIVATE_KEY,
-  SCOPES
-);
-
-const calendar = google.calendar({
-  version: "v3",
-  project: GOOGLE_PROJECT_NUMBER,
-  auth: jwtClient,
+const auth = new google.auth.JWT({
+  email: GOOGLE_CLIENT_EMAIL,
+  key: GOOGLE_PRIVATE_KEY,
+  scopes: ['https://www.googleapis.com/auth/calendar'],
+  subject: SUBJECT
 });
+
+const calendar = google.calendar({ version: 'v3', auth });
 
 const app = express();
 
@@ -59,6 +53,10 @@ app.listen(PORT || 3000, () => {
   }
   console.log(`listening on port ${PORT}`);
 });
+
+app.get('/health-check', async (req, res) => {
+  return res.send('ok')
+})
 
 app.get("/callback", generateAccessToken, async (req, res) => {
   try {
@@ -101,10 +99,17 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
         values["interview-start-time"]["interview-start-time"].selected_time;
       const interviewEndTime =
         values["interview-end-time"]["interview-end-time"].selected_time;
+      const interviewRound = values["interview-round"]["interview-round"].selected_option.value;
+      const interviewType = values['interview-type']['interview-type'].selected_option.value;
+      const { calendarId } = await Team.findOne({
+        teamId: team.id,
+      });
+
 
       await InterviewSchedule.create({
         teamId: team.id,
         userId: user.id,
+        batchName: team.domain,
         name,
         studentCode,
         email,
@@ -112,55 +117,37 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
         interviewDate,
         interviewStartTime,
         interviewEndTime,
+        interviewRound,
+        interviewType
       });
 
-      var event = {
-        summary: `Name: ${name};
-        Code: ${studentCode};
-        Company: ${companyName}`,
-        location: "",
-        description: "",
-        start: {
-          dateTime: `${interviewDate}T${interviewStartTime}:00`,
-          timeZone: "Asia/Kolkata",
-        },
-        end: {
-          dateTime: `${interviewDate}T${interviewEndTime}:00`,
-          timeZone: "Asia/Kolkata",
-        },
-        attendees: [],
-        reminders: {
-          useDefault: false,
-          overrides: [
-            { method: "email", minutes: 24 * 60 },
-            { method: "popup", minutes: 10 },
-          ],
-        },
-      };
-
-      const auth = new google.auth.GoogleAuth({
-        keyFile:
-          "/Users/manideep/masai-school/interviews-schedule-monitor/service-key-file.json",
-        scopes: "https://www.googleapis.com/auth/calendar",
-      });
-      auth.getClient().then((a) => {
-        calendar.events.insert(
-          {
-            auth: a,
-            calendarId: GOOGLE_CALENDAR_ID,
-            resource: event,
+      calendar.events.insert({
+        calendarId: calendarId || SUBJECT,
+        sendUpdates: 'all',
+        requestBody: {
+          summary: `${name}; ${studentCode}; ${companyName.charAt(0).toUpperCase() + companyName.slice(1)}`,
+          description: `Round: ${interviewRound}; Type: ${interviewType};`,
+          start: {
+            dateTime: `${interviewDate}T${interviewStartTime}:00`,
+            timeZone: "Asia/Kolkata",
           },
-          function (err, event) {
-            if (err) {
-              console.log(
-                "There was an error contacting the Calendar service: " + err
-              );
-              return;
-            }
-            console.log("Event created: %s", event.data);
-          }
-        );
+          end: {
+            dateTime: `${interviewDate}T${interviewEndTime}:00`,
+            timeZone: "Asia/Kolkata",
+          },
+          attendees: [{email}],
+          reminders: {
+            useDefault: false,
+            overrides: [
+              { method: "email", minutes: 24 * 60 },
+              { method: "popup", minutes: 10 },
+            ],
+          },
+        }
+      }, (err, res) => {
+        if (err) return console.log('The API returned an error: ' + err);
       });
+
       res.status(200).json({ response_action: "clear" });
     } else {
       const { accessToken, companies } = await Team.findOne({
@@ -231,77 +218,22 @@ app.get("/interviews-schedule/:date", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  calendar.events.list(
-    {
-      calendarId: GOOGLE_CALENDAR_ID,
-      timeMin: new Date().toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: "startTime",
-    },
-    (error, result) => {
-      if (error) {
-        res.send(JSON.stringify({ error: error }));
-      } else {
-        if (result.data.items.length) {
-          res.send(JSON.stringify({ events: result.data.items }));
-        } else {
-          res.send(JSON.stringify({ message: "No upcoming events found." }));
-        }
-      }
-    }
-  );
-});
-
-app.get("/createEvent", (req, res) => {
-  var event = {
-    summary: "My first event!",
-    location: "Hyderabad,India",
-    description: "First event with nodeJS!",
-    start: {
-      dateTime: "2022-05-25T09:00:00-07:00",
-      timeZone: "Asia/Dhaka",
-    },
-    end: {
-      dateTime: "2022-05-25T10:00:00-07:00",
-      timeZone: "Asia/Dhaka",
-    },
-    attendees: [],
-    reminders: {
-      useDefault: false,
-      overrides: [
-        { method: "email", minutes: 24 * 60 },
-        { method: "popup", minutes: 10 },
-      ],
-    },
-  };
-
-  const auth = new google.auth.GoogleAuth({
-    keyFile:
-      "/Users/manideep/masai-school/interviews-schedule-monitor/service-key-file.json",
-    scopes: "https://www.googleapis.com/auth/calendar",
-  });
-  auth.getClient().then((a) => {
-    calendar.events.insert(
-      {
-        auth: a,
-        calendarId: GOOGLE_CALENDAR_ID,
-        resource: event,
-      },
-      function (err, event) {
-        if (err) {
-          console.log(
-            "There was an error contacting the Calendar service: " + err
-          );
-          return;
-        }
-        console.log("Event created: %s", event.data);
-        res.jsonp("Event successfully created!");
-      }
+app.patch('/teams/:teamId/calendar', async (req, res) => {
+  const { calendarId, key } = req.body;
+  const teamId = req.params.teamId;
+  if (key != KEY) {
+    return res.status(403).send("You are not authorized. Wrong key.");
+  }
+  try {
+    await Team.findOneAndUpdate(
+      { teamId },
+      { calendarId }
     );
-  });
-});
+    res.status(200).send('Updated!')
+  } catch (error) {
+    res.status(500).send(`Something went wrong: ${err}`);
+  }
+})
 
 async function generateAccessToken(req, res, next) {
   const code = req.query.code;

@@ -144,6 +144,126 @@
           "text": "Interview End Time",
           "emoji": true
         }
+      },
+      {
+        "block_id": "interview-round",
+        "type": "input",
+        "element": {
+          "type": "static_select",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Which round?",
+            "emoji": true
+          },
+          "options": [
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Round 1",
+                "emoji": true
+              },
+              "value": "1"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Round 2",
+                "emoji": true
+              },
+              "value": "2"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Round 3",
+                "emoji": true
+              },
+              "value": "3"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Round 4",
+                "emoji": true
+              },
+              "value": "4"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Round 5",
+                "emoji": true
+              },
+              "value": "5"
+            }
+          ],
+          "action_id": "interview-round"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Interview Round",
+          "emoji": true
+        }
+      },
+      {
+        "block_id": "interview-type",
+        "type": "input",
+        "element": {
+          "type": "static_select",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Select all that apply, if you had multiple rounds",
+            "emoji": true
+          },
+          "options": [
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Screening/Introduction",
+                "emoji": true
+              },
+              "value": "Screening/Introduction"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Assignment (take home)",
+                "emoji": true
+              },
+              "value": "Assignment (take home)"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Technical Discussion",
+                "emoji": true
+              },
+              "value": "Technical Discussion"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "HR/Management discussion",
+                "emoji": true
+              },
+              "value": "HR/Management discussion"
+            },
+            {
+              "text": {
+                "type": "plain_text",
+                "text": "Aptitude Test",
+                "emoji": true
+              },
+              "value": "Aptitude Test"
+            }
+          ],
+          "action_id": "interview-type"
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Interview Type",
+          "emoji": true
+        }
       }
     ]
   }
