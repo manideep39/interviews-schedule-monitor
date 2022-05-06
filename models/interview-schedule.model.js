@@ -13,7 +13,7 @@ const interviewSchedule = mongoose.Schema(
     interviewStartTime: { type: String, required: true },
     interviewEndTime: { type: String, required: true },
     interviewRound: { type: String, required: true},
-    interviewType: [{ type: String, required: true}]
+    interviewType: { type: String, required: true}
   },
   { timestamps: true }
 );
