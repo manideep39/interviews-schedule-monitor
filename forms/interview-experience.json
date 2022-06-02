@@ -1,0 +1,413 @@
+{
+    "view": {
+      "title": {
+        "type": "plain_text",
+        "text": "Interview Experience",
+        "emoji": true
+      },
+      "callback_id": "interview_experience",
+      "submit": {
+        "type": "plain_text",
+        "text": "Submit",
+        "emoji": true
+      },
+      "type": "modal",
+      "close": {
+        "type": "plain_text",
+        "text": "Cancel",
+        "emoji": true
+      },
+      "blocks": [
+        {
+          "block_id": "studentCode",
+          "type": "input",
+          "element": {
+            "type": "plain_text_input",
+            "action_id": "studentCode",
+            "placeholder": {
+              "type": "plain_text",
+              "text": "ac_042",
+              "emoji": true
+            }
+          },
+          "label": {
+            "type": "plain_text",
+            "text": "Student code",
+            "emoji": true
+          }
+        },
+        {
+            "block_id": "email",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "email",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Email",
+              "emoji": true
+            }
+        },
+        {
+          "block_id": "company-name",
+          "type": "input",
+          "element": {
+            "type": "static_select",
+            "placeholder": {
+              "type": "plain_text",
+              "text": "Choose the interviewing company",
+              "emoji": true
+            },
+            "options": [],
+            "action_id": "company-name"
+          },
+          "label": {
+            "type": "plain_text",
+            "text": "Company Name",
+            "emoji": true
+          }
+        },
+        {
+          "block_id": "interview-round",
+          "type": "input",
+          "element": {
+            "type": "static_select",
+            "placeholder": {
+              "type": "plain_text",
+              "text": "Which round was it?",
+              "emoji": true
+            },
+            "options": [
+              {
+                "text": {
+                  "type": "plain_text",
+                  "text": "Round 1",
+                  "emoji": true
+                },
+                "value": "1"
+              },
+              {
+                "text": {
+                  "type": "plain_text",
+                  "text": "Round 2",
+                  "emoji": true
+                },
+                "value": "2"
+              },
+              {
+                "text": {
+                  "type": "plain_text",
+                  "text": "Round 3",
+                  "emoji": true
+                },
+                "value": "3"
+              },
+              {
+                "text": {
+                  "type": "plain_text",
+                  "text": "Round 4",
+                  "emoji": true
+                },
+                "value": "4"
+              },
+              {
+                "text": {
+                  "type": "plain_text",
+                  "text": "Round 5",
+                  "emoji": true
+                },
+                "value": "5"
+              }
+            ],
+            "action_id": "interview-round"
+          },
+          "label": {
+            "type": "plain_text",
+            "text": "Interview Round",
+            "emoji": true
+          }
+        },
+        {
+          "block_id": "interview-type",
+          "type": "input",
+          "element": {
+            "type": "static_select",
+            "placeholder": {
+              "type": "plain_text",
+              "text": "Select all that apply, if you had multiple rounds",
+              "emoji": true
+            },
+            "options": [],
+            "action_id": "interview-type"
+          },
+          "label": {
+            "type": "plain_text",
+            "text": "Interview Type",
+            "emoji": true
+          }
+        },
+        {
+            "block_id": "interviewerDetails",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "interviewerDetails",
+              "placeholder": {
+                "type": "plain_text",
+                "text": "Ex: Name-Designation-Role",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Interviewer Name & their role/title/designation",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "questionsAsked",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "questionsAsked",
+              "multiline": true,
+              "placeholder": {
+                "type": "plain_text",
+                "text": "Please share key points here. For long form questions/assignment etc - use the document upload section",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Questions Asked",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "codingTopicsAsked",
+            "type": "input",
+            "element": {
+              "type": "multi_static_select",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              },
+              "options": [],
+              "action_id": "codingTopicsAsked"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Select all the relevant coding topics asked in the interview/test.",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "dsaTopicsAsked",
+            "type": "input",
+            "element": {
+              "type": "multi_static_select",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              },
+              "options": [],
+              "action_id": "dsaTopicsAsked"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Select all the relevant DSA topics asked in the interview/test.",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "whatWentWell",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "multiline": true,
+              "action_id": "whatWentWell",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "What went well?",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "whatWentWrong",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "multiline": true,
+              "action_id": "whatWentWrong",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "What went wrong?",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "extentTopicsCovered",
+            "type": "input",
+            "element": {
+              "type": "static_select",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              },
+              "options": [
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Completely and thoroughly",
+                    "emoji": true
+                  },
+                  "value": "Completely and thoroughly"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "To some Extent",
+                    "emoji": true
+                  },
+                  "value": "To some Extent"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Not at all",
+                    "emoji": true
+                  },
+                  "value": "Not at all"
+                }
+              ],
+              "action_id": "extentTopicsCovered"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "To what extent was the topics covered in the Masai curriculum?",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "topicsNotOrPartiallyCovered",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "topicsNotOrPartiallyCovered",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Which topic(s) were not/partially covered in the curriculum?",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "movedToNextRoundOrAnOffer",
+            "type": "input",
+            "element": {
+              "type": "static_select",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              },
+              "options": [
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Yes",
+                    "emoji": true
+                  },
+                  "value": "Yes"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "No",
+                    "emoji": true
+                  },
+                  "value": "No"
+                },
+                {
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Waiting for the company to revert",
+                    "emoji": true
+                  },
+                  "value": "Waiting for the company to revert"
+                }
+              ],
+              "action_id": "movedToNextRoundOrAnOffer"
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Did you move to the next round or receive an offer?",
+              "emoji": true
+            }
+        },
+        {
+            "block_id": "wantToChange",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "wantToChange",
+              "placeholder": {
+                "type": "plain_text",
+                "text": " ",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "In case you didn't get the offer and you have to re-take the interview, what would you want to change?",
+              "emoji": true
+            }
+          },
+        {
+            "block_id": "assignmentOrRelevantDocLink",
+            "type": "input",
+            "element": {
+              "type": "plain_text_input",
+              "action_id": "assignmentOrRelevantDocLink",
+              "placeholder": {
+                "type": "plain_text",
+                "text": "Please upload the files to google drive and share the link",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "Upload assignments/relevant document link here, if any",
+              "emoji": true
+            }
+        }
+      ]
+    }
+  }
+  

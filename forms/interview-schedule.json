@@ -215,48 +215,7 @@
             "text": "Select all that apply, if you had multiple rounds",
             "emoji": true
           },
-          "options": [
-            {
-              "text": {
-                "type": "plain_text",
-                "text": "Screening/Introduction",
-                "emoji": true
-              },
-              "value": "Screening/Introduction"
-            },
-            {
-              "text": {
-                "type": "plain_text",
-                "text": "Assignment (take home)",
-                "emoji": true
-              },
-              "value": "Assignment (take home)"
-            },
-            {
-              "text": {
-                "type": "plain_text",
-                "text": "Technical Discussion",
-                "emoji": true
-              },
-              "value": "Technical Discussion"
-            },
-            {
-              "text": {
-                "type": "plain_text",
-                "text": "HR/Management discussion",
-                "emoji": true
-              },
-              "value": "HR/Management discussion"
-            },
-            {
-              "text": {
-                "type": "plain_text",
-                "text": "Aptitude Test",
-                "emoji": true
-              },
-              "value": "Aptitude Test"
-            }
-          ],
+          "options": [],
           "action_id": "interview-type"
         },
         "label": {
