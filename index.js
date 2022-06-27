@@ -339,21 +339,31 @@ app.post("/slack/interactive-endpoint", async (req, res) => {
 app.post("/companies", async (req, res) => {
   try {
     const { companies, key, teamId } = req.body;
+
     if (key != KEY) {
       return res.status(403).send("You are not authorized. Wrong key.");
     }
-    await Team.findOneAndUpdate(
-      { teamId },
-      {
-        $addToSet: {
-          companies: {
-            $each: companies.map((e) => e.trim().toLowerCase()),
-          },
-        },
-      }
-    );
 
-    res.status(200).send("Updated!");
+    const { companies: existingCompanies } = await Team.findOne({ teamId }, { companies: 1 });
+    const slackDropdownLimit = 100;
+
+    if (existingCompanies.length + companies.length > slackDropdownLimit) {
+      res.status(400).send(`Not Updated!. Addding new companies will cross the limit of ${slackDropdownLimit} iteam in slack dropdown list. 
+      Try deleting some companies in database or try adding fewer iteams. Currently you can add ${slackDropdownLimit - existingCompanies.length} companies only.`);
+    } else {
+      await Team.findOneAndUpdate(
+        { teamId },
+        {
+          $addToSet: {
+            companies: {
+              $each: companies.map((e) => e.trim().toLowerCase()),
+            },
+          },
+        }
+      );
+  
+      res.status(200).send("Updated!");
+    }
   } catch (err) {
     res.status(500).send(`Something went wrong: ${err}`);
   }
